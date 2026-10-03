@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آزمون ریاضی ششم - یادآوری عددنویسی</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Tahoma, "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(135deg, #eef7ff, #f8f1ff);
+        color: #263238;
+        min-height: 100vh;
+    }
+
+    button,
+    input {
+        font-family: inherit;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 1050px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .screen {
+        display: none;
+    }
+
+    .screen.active {
+        display: block;
+    }
+
+    /* صفحه شروع */
+    .start-card {
+        max-width: 650px;
+        margin: 60px auto;
+        background: white;
+        border-radius: 28px;
+        padding: 45px 35px;
+        text-align: center;
+        box-shadow: 0 15px 45px rgba(60, 70, 120, 0.15);
+    }
+
+    .logo {
+        font-size: 70px;
+        margin-bottom: 10px;
+    }
+
+    .start-card h1 {
+        color: #3949ab;
+        margin: 5px 0;
+        font-size: 32px;
+    }
+
+    .start-card h2 {
+        color: #7e57c2;
+        margin-top: 8px;
+        font-size: 23px;
+    }
+
+    .description {
+        background: #f3f6ff;
+        border-radius: 16px;
+        padding: 16px;
+        margin: 25px 0;
+        line-height: 2;
+        font-size: 15px;
+    }
+
+    .name-label {
+        display: block;
+        text-align: right;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    .name-input {
+        width: 100%;
+        border: 2px solid #c5cae9;
+        border-radius: 14px;
+        padding: 15px;
+        font-size: 18px;
+        outline: none;
+        transition: .2s;
+        direction: rtl;
+    }
+
+    .name-input:focus {
+        border-color: #5c6bc0;
+        box-shadow: 0 0 0 4px rgba(92,107,192,.12);
+    }
+
+    .main-btn {
+        width: 100%;
+        border: none;
+        border-radius: 15px;
+        padding: 16px 25px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 20px;
+        color: white;
+        background: linear-gradient(135deg, #3949ab, #7e57c2);
+        transition: .2s;
+    }
+
+    .main-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(63,81,181,.25);
+    }
+
+    .main-btn:disabled {
+        background: #bdbdbd;
+        cursor: not-allowed;
+    }
+
+    /* هدر آزمون */
+    .exam-header {
+        background: white;
+        border-radius: 20px;
+        padding: 15px 20px;
+        box-shadow: 0 7px 25px rgba(0,0,0,.08);
+        margin-bottom: 18px;
+        position: sticky;
+        top: 10px;
+        z-index: 20;
+    }
+
+    .header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .student-name {
+        font-weight: bold;
+        color: #3949ab;
+    }
+
+    .timer {
+        direction: ltr;
+        min-width: 105px;
+        text-align: center;
+        background: #3949ab;
+        color: white;
+        border-radius: 12px;
+        padding: 9px 15px;
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    .timer.warning {
+        background: #e53935;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        50% {
+            transform: scale(1.04);
+        }
+    }
+
+    .progress-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .progress-container {
+        width: 100%;
+        height: 13px;
+        background: #e8eaf6;
+        border-radius: 20px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #3949ab, #7e57c2);
+        border-radius: 20px;
+        transition: width .3s;
+    }
+
+    /* کارت سوال */
+    .question-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .question-number {
+        display: inline-block;
+        background: #ede7f6;
+        color: #5e35b1;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-weight: bold;
+        margin-bottom: 18px;
+    }
+
+    .question-text {
+        font-size: 19px;
+        line-height: 2.2;
+        font-weight: bold;
+        margin-bottom: 22px;
+    }
+
+    .options {
+        display: grid;
+        gap: 13px;
+    }
+
+    .option {
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 15px;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        transition: .2s;
+        background: #fff;
+        line-height: 1.9;
+    }
+
+    .option:hover {
+        border-color: #9fa8da;
+        background: #f8f8ff;
+    }
+
+    .option.selected {
+        border-color: #3949ab;
+        background: #eef0ff;
+        box-shadow: 0 0 0 3px rgba(63,81,181,.08);
+    }
+
+    .option-letter {
+        min-width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: #eeeeee;
+        font-weight: bold;
+    }
+
+    .option.selected .option-letter {
+        background: #3949ab;
+        color: white;
+    }
+
+    .option input {
+        display: none;
+    }
+
+    .navigation {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .nav-btn {
+        border: none;
+        border-radius: 13px;
+        padding: 13px 25px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .prev-btn {
+        background: #eceff1;
+        color: #37474f;
+    }
+
+    .next-btn {
+        background: #3949ab;
+        color: white;
+    }
+
+    .finish-btn {
+        background: #e53935;
+        color: white;
+    }
+
+    .question-grid {
+        display: grid;
+        grid-template-columns: repeat(15, 1fr);
+        gap: 5px;
+        margin-top: 15px;
+    }
+
+    .q-number {
+        height: 35px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #eceff1;
+        font-weight: bold;
+    }
+
+    .q-number.current {
+        background: #3949ab;
+        color: white;
+    }
+
+    .q-number.answered {
+        background: #81c784;
+        color: white;
+    }
+
+    .q-number.current.answered {
+        background: #3949ab;
+    }
+
+    /* کارنامه */
+    .result-card {
+        background: white;
+        border-radius: 25px;
+        padding: 35px;
+        box-shadow: 0 10px 40px rgba(0,0,0,.1);
+    }
+
+    .result-title {
+        text-align: center;
+        color: #3949ab;
+        font-size: 30px;
+        margin-top: 0;
+    }
+
+    .score-circle {
+        width: 170px;
+        height: 170px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #3949ab, #7e57c2);
+        color: white;
+        margin: 20px auto 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 30px rgba(63,81,181,.25);
+    }
+
+    .score-number {
+        font-size: 43px;
+        font-weight: bold;
+        direction: ltr;
+    }
+
+    .score-label {
+        font-size: 15px;
+    }
+
+    .student-result {
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        margin-bottom: 30px;
+    }
+
+    .stat {
+        border-radius: 15px;
+        padding: 17px 8px;
+        text-align: center;
+        background: #f5f5f5;
+    }
+
+    .stat strong {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 5px;
+    }
+
+    .correct-stat {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .wrong-stat {
+        background: #ffebee;
+        color: #c62828;
+    }
+
+    .blank-stat {
+        background: #f5f5f5;
+        color: #616161;
+    }
+
+    .time-stat {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+
+    .attempt-stat {
+        background: #fff3e0;
+        color: #e65100;
+    }
+
+    .review-title {
+        color: #5e35b1;
+        border-bottom: 2px solid #ede7f6;
+        padding-bottom: 12px;
+    }
+
+    .review-item {
+        border-radius: 18px;
+        padding: 20px;
+        margin: 15px 0;
+        border: 2px solid #eee;
+    }
+
+    .review-item.wrong {
+        border-color: #ffcdd2;
+        background: #fffafa;
+    }
+
+    .review-item.blank {
+        border-color: #eeeeee;
+        background: #fafafa;
+    }
+
+    .review-question {
+        font-weight: bold;
+        line-height: 2;
+        margin-bottom: 12px;
+    }
+
+    .answer-row {
+        padding: 9px 12px;
+        border-radius: 9px;
+        margin: 7px 0;
+        line-height: 1.8;
+    }
+
+    .user-answer {
+        background: #ffebee;
+        color: #b71c1c;
+    }
+
+    .correct-answer {
+        background: #e8f5e9;
+        color: #1b5e20;
+    }
+
+    .explanation {
+        background: #fff8e1;
+        border-right: 5px solid #ffb300;
+        padding: 12px 15px;
+        border-radius: 9px;
+        margin-top: 12px;
+        line-height: 2;
+    }
+
+    .result-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .result-buttons button {
+        flex: 1;
+    }
+
+    .empty-review {
+        text-align: center;
+        padding: 25px;
+        background: #e8f5e9;
+        border-radius: 15px;
+        color: #2e7d32;
+        font-weight: bold;
+    }
+
+    .ltr-number {
+        direction: ltr;
+        unicode-bidi: embed;
+        display: inline-block;
+    }
+
+    .confirm-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.55);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .confirm-overlay.show {
+        display: flex;
+    }
+
+    .confirm-box {
+        background: white;
+        max-width: 450px;
+        width: 100%;
+        border-radius: 22px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .confirm-box h3 {
+        color: #3949ab;
+    }
+
+    .confirm-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .confirm-actions button {
+        flex: 1;
+        padding: 13px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .cancel-btn {
+        background: #eeeeee;
+    }
+
+    .confirm-finish {
+        background: #e53935;
+        color: white;
+    }
+
+    @media (max-width: 700px) {
+        .app {
+            padding: 10px;
+        }
+
+        .start-card {
+            margin: 20px auto;
+            padding: 30px 20px;
+        }
+
+        .start-card h1 {
+            font-size: 25px;
+        }
+
+        .question-card {
+            padding: 20px 15px;
+        }
+
+        .question-text {
+            font-size: 17px;
+        }
+
+        .stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .question-grid {
+            grid-template-columns: repeat(8, 1fr);
+        }
+
+        .navigation {
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .result-buttons {
+            flex-direction: column;
+        }
+
+        .timer {
+            font-size: 19px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- صفحه شروع -->
+    <section id="startScreen" class="screen active">
+        <div class="start-card">
+            <div class="logo">🎓</div>
+            <h1>آزمون ریاضی ششم</h1>
+            <h2>یادآوری عددنویسی</h2>
+
+            <div class="description">
+                <strong>۱۵ سؤال چهارگزینه‌ای</strong><br>
+                ⏱ زمان آزمون: ۳۰ دقیقه<br>
+                📚 موضوع: عددنویسی و اعداد بزرگ<br>
+                🏆 در پایان، کارنامه و بررسی آموزشی پاسخ‌ها نمایش داده می‌شود.
+            </div>
+
+            <label class="name-label" for="studentName">
+                نام دانش‌آموز را وارد کنید:
+            </label>
+
+            <input
+                id="studentName"
+                class="name-input"
+                type="text"
+                maxlength="60"
+                placeholder="مثلاً علی رضایی"
+                autocomplete="off"
+            >
+
+            <button id="startBtn" class="main-btn" disabled>
+                شروع آزمون 🚀
+            </button>
+        </div>
+    </section>
+
+
+    <!-- صفحه آزمون -->
+    <section id="examScreen" class="screen">
+
+        <div class="exam-header">
+
+            <div class="header-top">
+                <div class="student-name">
+                    👨‍🎓 <span id="headerStudentName"></span>
+                </div>
+
+                <div id="timer" class="timer">
+                    30:00
+                </div>
+            </div>
+
+            <div class="progress-info">
+                <span id="questionCounter">سؤال ۱ از ۱۵</span>
+                <span id="progressPercent">۷٪</span>
+            </div>
+
+            <div class="progress-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div id="questionGrid" class="question-grid"></div>
+
+        </div>
+
+        <div class="question-card">
+
+            <div id="questionNumber" class="question-number">
+                سؤال ۱
+            </div>
+
+            <div id="questionText" class="question-text"></div>
+
+            <div id="options" class="options"></div>
+
+            <div class="navigation">
+
+                <button id="prevBtn" class="nav-btn prev-btn">
+                    قبلی ◀
+                </button>
+
+                <button id="nextBtn" class="nav-btn next-btn">
+                    بعدی ▶
+                </button>
+
+                <button id="finishBtn" class="nav-btn finish-btn">
+                    پایان آزمون
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- صفحه نتیجه -->
+    <section id="resultScreen" class="screen">
+
+        <div class="result-card">
+
+            <h1 class="result-title">
+                🏆 کارنامه آزمون
+            </h1>
+
+            <div class="score-circle">
+                <div id="scoreNumber" class="score-number">۲۰</div>
+                <div class="score-label">از ۲۰</div>
+            </div>
+
+            <div id="studentResult" class="student-result"></div>
+
+            <div class="stats">
+
+                <div class="stat attempt-stat">
+                    <strong id="attemptResult">۱</strong>
+                    دفعه آزمون
+                </div>
+
+                <div class="stat correct-stat">
+                    <strong id="correctResult">۰</strong>
+                    ✅ صحیح
+                </div>
+
+                <div class="stat wrong-stat">
+                    <strong id="wrongResult">۰</strong>
+                    ❌ غلط
+                </div>
+
+                <div class="stat blank-stat">
+                    <strong id="blankResult">۰</strong>
+                    ⚪ بدون پاسخ
+                </div>
+
+                <div class="stat time-stat">
+                    <strong id="timeResult">۰۰:۰۰</strong>
+                    ⏱ زمان
+                </div>
+
+            </div>
+
+            <h2 class="review-title">
+                📚 بررسی و یادگیری
+            </h2>
+
+            <div id="reviewContainer"></div>
+
+            <div class="result-buttons">
+
+                <button id="retryBtn" class="main-btn">
+                    🔄 دوباره آزمون بده
+                </button>
+
+                <button id="homeBtn" class="main-btn">
+                    🏠 بازگشت به صفحه اصلی
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- پنجره تأیید پایان آزمون -->
+<div id="confirmOverlay" class="confirm-overlay">
+
+    <div class="confirm-box">
+
+        <div style="font-size:50px;">⚠️</div>
+
+        <h3>پایان آزمون</h3>
+
+        <p>
+            آیا مطمئن هستید که می‌خواهید آزمون را به پایان برسانید؟
+        </p>
+
+        <div class="confirm-actions">
+
+            <button id="cancelFinish" class="cancel-btn">
+                ادامه آزمون
+            </button>
+
+            <button id="confirmFinish" class="confirm-finish">
+                بله، پایان آزمون
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   اطلاعات ۱۵ سؤال
+========================================================= */
+
+const questions = [
+
+    {
+        text: `صورت رقمی عدد «پنجاه و سه میلیارد و چهل و دو میلیون و یکصد و شصت و نه هزار و هفتاد و هفت» کدام گزینه است؟`,
+        options: [
+            "۵۳۰۴۲۱۶۹۷۷",
+            "۵۳۰۴۲۱۶۹۰۷۷",
+            "۵۳۴۲۱۶۹۷۷",
+            "۵۳۴۲۰۱۶۹۷۷"
+        ],
+        answer: 1,
+        explanation: `عدد به صورت ۵۳ میلیارد، ۴۲ میلیون، ۱۶۹ هزار و ۷۷ نوشته می‌شود. بنابراین صفرهای مربوط به مرتبه‌های خالی باید در جای خود قرار بگیرند و عدد برابر با ۵۳٬۰۴۲٬۱۶۹٬۰۷۷ است.`
+    },
+
+    {
+        text: `در عدد ۶۳,۸۳۱,۵۶۸، اگر عدد در ۱۰۰ ضرب شود، ارزش مکانی رقم ۱ چه تغییری می‌کند؟`,
+        options: [
+            "از یکان هزار به دهگان هزار منتقل می‌شود.",
+            "از یکان هزار به صدگان هزار منتقل می‌شود.",
+            "از یکان هزار به یکان میلیون منتقل می‌شود.",
+            "ارزش مکانی آن تغییری نمی‌کند."
+        ],
+        answer: 1,
+        explanation: `با ضرب در ۱۰۰، هر رقم دو مرتبه به سمت چپ منتقل می‌شود. رقم ۱ ابتدا در مرتبه یکان هزار است و دو مرتبه به سمت چپ، به مرتبه صدگان هزار می‌رود.`
+    },
+
+    {
+        text: `با کارت‌های رقم ۰ تا ۹، بدون تکرار ارقام، بزرگ‌ترین عدد ۱۰ رقمی فرد کدام است؟`,
+        options: [
+            "۹۸۷۶۵۴۳۲۱۰",
+            "۹۸۷۶۵۴۳۲۰۱",
+            "۹۸۷۶۵۴۳۱۲۰",
+            "۹۸۷۶۵۴۳۰۱۲"
+        ],
+        answer: 1,
+        explanation: `عدد باید فرد باشد، پس رقم یکان باید فرد باشد. برای ساخت بزرگ‌ترین عدد، کوچک‌ترین رقم فرد یعنی ۱ را در یکان قرار می‌دهیم و سایر رقم‌ها را از بزرگ به کوچک می‌چینیم.`
+    },
+
+    {
+        text: `در عدد ۶۳,۸۳۱,۵۶۸، ارزش مکانی دو رقم ۳ از چپ به راست به ترتیب کدام است؟`,
+        options: [
+            "یکان میلیون و دهگان هزار",
+            "دهگان میلیون و یکان هزار",
+            "یکان میلیون و صدگان هزار",
+            "دهگان میلیون و دهگان هزار"
+        ],
+        answer: 0,
+        explanation: `رقم ۳ اول از سمت چپ در مرتبه یکان میلیون و رقم ۳ دوم در مرتبه دهگان هزار قرار دارد.`
+    },
+
+    {
+        text: `در مقایسه دو عدد ۱۲,۰۵۸,۳۴۱,۴۱۷ و ۹,۹۹۸,۶۵۳,۷۴۹ کدام عبارت درست است؟`,
+        options: [
+            "عدد ۹,۹۹۸,۶۵۳,۷۴۹ بزرگ‌تر است چون اولین رقم سمت چپ آن ۹ است.",
+            "عدد ۱۲,۰۵۸,۳۴۱,۴۱۷ بزرگ‌تر است چون تعداد ارقام آن بیشتر است.",
+            "دو عدد برابر هستند چون هر دو در طبقه میلیارد قرار دارند.",
+            "عدد ۹,۹۹۸,۶۵۳,۷۴۹ بزرگ‌تر است چون مجموع ارقامش بیشتر است."
+        ],
+        answer: 1,
+        explanation: `عدد ۱۲,۰۵۸,۳۴۱,۴۱۷ یازده رقمی و عدد دیگر ده رقمی است. هر عددی که تعداد رقم‌های بیشتری داشته باشد، بزرگ‌تر است.`
+    },
+
+    {
+        text: `اگر عدد ۱۲۹,۸۶۴,۸۰۰ بر ۱۰ تقسیم شود، ارزش مکانی ارقام آن چگونه تغییر می‌کند؟`,
+        options: [
+            "ارقام یک مرتبه به سمت چپ می‌روند و عدد بزرگ‌تر می‌شود.",
+            "ارقام یک مرتبه به سمت راست می‌روند و عدد به ۱۲,۹۸۶,۴۸۰ تبدیل می‌شود.",
+            "ارزش ارقام تغییری نمی‌کند و فقط صفر یکان حذف می‌شود.",
+            "رقم ۱ از صد میلیون به میلیارد تغییر می‌کند."
+        ],
+        answer: 1,
+        explanation: `با تقسیم بر ۱۰، ارزش مکانی ارقام یک مرتبه کاهش می‌یابد و عدد به ۱۲٬۹۸۶٬۴۸۰ تبدیل می‌شود.`
+    },
+
+    {
+        text: `جمعیت کشور سوئد ۹,۴۱۲,۰۰۰ نفر است. مقدار تقریبی این جمعیت با تقریب یک میلیون کدام است؟`,
+        options: [
+            "۱۰,۰۰۰,۰۰۰",
+            "۹,۰۰۰,۰۰۰",
+            "۹,۴۰۰,۰۰۰",
+            "۹,۵۰۰,۰۰۰"
+        ],
+        answer: 1,
+        explanation: `برای تقریب به یک میلیون، به رقم صدگان هزار نگاه می‌کنیم. چون ۴ کمتر از ۵ است، عدد به ۹٬۰۰۰٬۰۰۰ تقریب زده می‌شود.`
+    },
+
+    {
+        text: `تعداد کتاب‌های منتشرشده در یک سال ۱۲۹,۸۶۴,۸۰۰ جلد بوده است. مقدار تقریبی این عدد با تقریب ده میلیون کدام است؟`,
+        options: [
+            "۱۲۰,۰۰۰,۰۰۰",
+            "۱۲۹,۰۰۰,۰۰۰",
+            "۱۳۰,۰۰۰,۰۰۰",
+            "۱۰۰,۰۰۰,۰۰۰"
+        ],
+        answer: 2,
+        explanation: `با تقریب ده میلیون، عدد ۱۲۹٬۸۶۴٬۸۰۰ به ۱۳۰٬۰۰۰٬۰۰۰ نزدیک‌تر است.`
+    },
+
+    {
+        text: `صورت گسترده عدد «۴ میلیارد و ۲۰ میلیون و ۵۰۰ هزار و ۹» کدام است؟`,
+        options: [
+            "۴,۰۰۰,۰۰۰,۰۰۰ + ۲۰۰,۰۰۰,۰۰۰ + ۵۰۰,۰۰۰ + ۹",
+            "۴,۰۰۰,۰۰۰,۰۰۰ + ۲۰,۰۰۰,۰۰۰ + ۵۰۰,۰۰۰ + ۹",
+            "۴۰۰,۰۰۰,۰۰۰ + ۲۰,۰۰۰,۰۰۰ + ۵۰,۰۰۰ + ۹",
+            "۴,۰۰۰,۰۰۰,۰۰۰ + ۲۰,۰۰۰,۰۰۰ + ۵,۰۰۰,۰۰۰ + ۹"
+        ],
+        answer: 1,
+        explanation: `عدد از ۴ میلیارد، ۲۰ میلیون، ۵۰۰ هزار و ۹ تشکیل شده است.`
+    },
+
+    {
+        text: `عدد ۶۸۰,۰۰۰,۱۴۹ بین کدام دو عدد قرار می‌گیرد و به کدام‌یک نزدیک‌تر است؟`,
+        options: [
+            "بین ۵۰۰ میلیون و ۶۰۰ میلیون، نزدیک‌تر به ۶۰۰ میلیون",
+            "بین ۶۰۰ میلیون و ۷۰۰ میلیون، نزدیک‌تر به ۷۰۰ میلیون",
+            "بین ۷۰۰ میلیون و ۸۰۰ میلیون، نزدیک‌تر به ۷۰۰ میلیون",
+            "بین ۶۰۰ میلیون و ۷۰۰ میلیون، نزدیک‌تر به ۶۰۰ میلیون"
+        ],
+        answer: 1,
+        explanation: `عدد ۶۸۰,۰۰۰,۱۴۹ بین ۶۰۰ میلیون و ۷۰۰ میلیون است و فاصله آن تا ۷۰۰ میلیون کمتر است.`
+    },
+
+    {
+        text: `بزرگ‌ترین عدد فرد ۸ رقمی بدون تکرار رقم‌ها که دو رقم اول آن ۳۵ باشد، کدام است؟`,
+        options: [
+            "۳۵,۹۸۷,۶۴۳",
+            "۳۵,۹۸۷,۶۱۴",
+            "۳۵,۸۹۷,۶۴۱",
+            "۳۵,۹۸۷,۴۶۱"
+        ],
+        answer: 0,
+        explanation: `برای ساخت بزرگ‌ترین عدد، پس از ۳۵، رقم‌های باقی‌مانده را تا حد امکان از بزرگ به کوچک قرار می‌دهیم. چون عدد باید فرد باشد، رقم یکان باید فرد باشد. بنابراین بزرگ‌ترین حالت ممکن ۳۵٬۹۸۷٬۶۴۳ است.`
+    },
+
+    {
+        text: `جمعیت یک کشور ۸۴,۵۰۲,۱۹۰ نفر است. رقم ۵ در چه طبقه و مرتبه‌ای قرار دارد؟`,
+        options: [
+            "طبقه میلیون، مرتبه دهگان میلیون",
+            "طبقه هزار، مرتبه صدگان هزار",
+            "طبقه میلیون، مرتبه یکان میلیون",
+            "طبقه هزار، مرتبه دهگان هزار"
+        ],
+        answer: 1,
+        explanation: `عدد به صورت ۸۴ میلیون و ۵۰۲ هزار و ۱۹۰ است. رقم ۵ در طبقه هزار و مرتبه صدگان هزار قرار دارد.`
+    },
+
+    {
+        text: `مقدار تقریبی عدد ۴۵۸,۳۲۱,۹۰۰ با تقریب صد هزار کدام گزینه است؟`,
+        options: [
+            "۴۵۸,۰۰۰,۰۰۰",
+            "۴۵۸,۳۰۰,۰۰۰",
+            "۴۵۸,۴۰۰,۰۰۰",
+            "۴۵۰,۰۰۰,۰۰۰"
+        ],
+        answer: 1,
+        explanation: `رقم مرتبه صدگان هزار، ۳ است و رقم بعدی ۲ است. چون ۲ کمتر از ۵ است، عدد به ۴۵۸٬۳۰۰٬۰۰۰ تقریب زده می‌شود.`
+    },
+
+    {
+        text: `در عدد ۵,۲۰۵,۳۴۰، اختلاف ارزش دو رقم ۵ کدام است؟`,
+        options: [
+            "۴,۵۰۰,۰۰۰",
+            "۴,۹۹۹,۵۰۰",
+            "۵,۰۰۰,۰۰۰",
+            "۵,۵۰۰,۰۰۰"
+        ],
+        answer: 0,
+        explanation: `عدد را به صورت ۵ | ۲۰۵ | ۳۴۰ در نظر می‌گیریم.\n\nرقم ۵ اول در مرتبه یکان میلیون قرار دارد:\n۵ × ۱,۰۰۰,۰۰۰ = ۵,۰۰۰,۰۰۰\n\nرقم ۵ دوم در مرتبه صدگان هزار قرار دارد:\n۵ × ۱۰۰,۰۰۰ = ۵۰۰,۰۰۰\n\nاکنون اختلاف دو ارزش را محاسبه می‌کنیم:\n۵,۰۰۰,۰۰۰ − ۵۰۰,۰۰۰ = ۴,۵۰۰,۰۰۰\n\nبنابراین پاسخ صحیح گزینه الف است.`
+    },
+
+    {
+        text: `اگر عدد ۴۵,۶۷۸ در ۱۰۰۰ ضرب شود، ارزش مکانی رقم ۵ از چه مرتبه‌ای به چه مرتبه‌ای تغییر می‌کند؟`,
+        options: [
+            "از یکان هزار به صدگان هزار",
+            "از یکان هزار به یکان میلیون",
+            "از دهگان هزار به یکان میلیون",
+            "از یکان هزار به دهگان میلیون"
+        ],
+        answer: 1,
+        explanation: `رقم ۵ ابتدا در مرتبه یکان هزار قرار دارد. با ضرب عدد در ۱۰۰۰، رقم‌ها سه مرتبه به سمت چپ منتقل می‌شوند و رقم ۵ به مرتبه یکان میلیون می‌رود.`
+    }
+
+];
+
+
+/* =========================================================
+   کلید کنترل‌شده
+========================================================= */
+
+const answerKey = [
+    1, 1, 1, 0, 1,
+    1, 1, 2, 1, 1,
+    0, 1, 1, 0, 1
+];
+
+
+/* =========================================================
+   متغیرهای بازی
+========================================================= */
+
+let studentName = "";
+let currentQuestion = 0;
+let userAnswers = new Array(questions.length).fill(null);
+
+let totalSeconds = 30 * 60;
+let remainingSeconds = totalSeconds;
+let timerInterval = null;
+let examStartedAt = null;
+let examFinished = false;
+
+
+/* =========================================================
+   عناصر صفحه
+========================================================= */
+
+const startScreen = document.getElementById("startScreen");
+const examScreen = document.getElementById("examScreen");
+const resultScreen = document.getElementById("resultScreen");
+
+const studentNameInput = document.getElementById("studentName");
+const startBtn = document.getElementById("startBtn");
+
+const headerStudentName = document.getElementById("headerStudentName");
+const timerEl = document.getElementById("timer");
+
+const questionCounter = document.getElementById("questionCounter");
+const progressPercent = document.getElementById("progressPercent");
+const progressBar = document.getElementById("progressBar");
+
+const questionNumber = document.getElementById("questionNumber");
+const questionText = document.getElementById("questionText");
+const optionsEl = document.getElementById("options");
+
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const finishBtn = document.getElementById("finishBtn");
+
+const questionGrid = document.getElementById("questionGrid");
+
+const confirmOverlay = document.getElementById("confirmOverlay");
+const cancelFinish = document.getElementById("cancelFinish");
+const confirmFinish = document.getElementById("confirmFinish");
+
+const scoreNumber = document.getElementById("scoreNumber");
+const studentResult = document.getElementById("studentResult");
+const attemptResult = document.getElementById("attemptResult");
+const correctResult = document.getElementById("correctResult");
+const wrongResult = document.getElementById("wrongResult");
+const blankResult = document.getElementById("blankResult");
+const timeResult = document.getElementById("timeResult");
+const reviewContainer = document.getElementById("reviewContainer");
+
+const retryBtn = document.getElementById("retryBtn");
+const homeBtn = document.getElementById("homeBtn");
+
+
+/* =========================================================
+   تبدیل اعداد انگلیسی به فارسی
+========================================================= */
+
+function faNumber(value) {
+    return String(value).replace(/[0-9]/g, d => "۰۱۲۳۴۵۶۷۸۹"[d]);
+}
+
+
+/* =========================================================
+   مدیریت نام دانش‌آموز
+========================================================= */
+
+studentNameInput.addEventListener("input", function () {
+    startBtn.disabled = this.value.trim().length === 0;
+});
+
+
+/* =========================================================
+   localStorage
+========================================================= */
+
+function normalizeName(name) {
+    return name
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+}
+
+function getAttemptCount(name) {
+    const key = "math6_attempt_" + normalizeName(name);
+    return Number(localStorage.getItem(key) || 0);
+}
+
+function increaseAttemptCount(name) {
+    const key = "math6_attempt_" + normalizeName(name);
+    const newCount = getAttemptCount(name) + 1;
+    localStorage.setItem(key, newCount);
+    return newCount;
+}
+
+
+/* =========================================================
+   شروع آزمون
+========================================================= */
+
+startBtn.addEventListener("click", startExam);
+
+function startExam() {
+
+    studentName = studentNameInput.value.trim();
+
+    if (!studentName) {
+        return;
+    }
+
+    currentQuestion = 0;
+    userAnswers = new Array(questions.length).fill(null);
+
+    remainingSeconds = totalSeconds;
+    examStartedAt = Date.now();
+    examFinished = false;
+
+    headerStudentName.textContent = studentName;
+
+    startScreen.classList.remove("active");
+    resultScreen.classList.remove("active");
+    examScreen.classList.add("active");
+
+    createQuestionGrid();
+    renderQuestion();
+
+    updateTimer();
+
+    clearInterval(timerInterval);
+
+    timerInterval = setInterval(() => {
+
+        if (examFinished) {
+            clearInterval(timerInterval);
+            return;
+        }
+
+        remainingSeconds--;
+
+        updateTimer();
+
+        if (remainingSeconds <= 0) {
+            remainingSeconds = 0;
+            updateTimer();
+            finishExam(false);
+        }
+
+    }, 1000);
+}
+
+
+/* =========================================================
+   تایمر
+========================================================= */
+
+function updateTimer() {
+
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+
+    timerEl.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+    if (remainingSeconds <= 5 * 60) {
+        timerEl.classList.add("warning");
+    } else {
+        timerEl.classList.remove("warning");
+    }
+}
+
+
+/* =========================================================
+   شبکه شماره سؤال‌ها
+========================================================= */
+
+function createQuestionGrid() {
+
+    questionGrid.innerHTML = "";
+
+    questions.forEach((_, index) => {
+
+        const btn = document.createElement("button");
+
+        btn.className = "q-number";
+        btn.textContent = faNumber(index + 1);
+
+        btn.addEventListener("click", () => {
+
+            currentQuestion = index;
+            renderQuestion();
+
+        });
+
+        questionGrid.appendChild(btn);
+    });
+
+    updateQuestionGrid();
+}
+
+
+function updateQuestionGrid() {
+
+    const buttons = questionGrid.querySelectorAll(".q-number");
+
+    buttons.forEach((btn, index) => {
+
+        btn.classList.toggle(
+            "current",
+            index === currentQuestion
+        );
+
+        btn.classList.toggle(
+            "answered",
+            userAnswers[index] !== null
+        );
+
+    });
+}
+
+
+/* =========================================================
+   نمایش سؤال
+========================================================= */
+
+function renderQuestion() {
+
+    const q = questions[currentQuestion];
+
+    questionNumber.textContent =
+        "سؤال " + faNumber(currentQuestion + 1);
+
+    questionText.textContent = q.text;
+
+    optionsEl.innerHTML = "";
+
+    const letters = ["الف", "ب", "ج", "د"];
+
+    q.options.forEach((option, index) => {
+
+        const label = document.createElement("label");
+
+        label.className = "option";
+
+        if (userAnswers[currentQuestion] === index) {
+            label.classList.add("selected");
+        }
+
+        label.innerHTML = `
+            <input type="radio"
+                   name="questionOption"
+                   value="${index}">
+            <span class="option-letter">${letters[index]}</span>
+            <span>${option}</span>
+        `;
+
+        label.addEventListener("click", function () {
+
+            userAnswers[currentQuestion] = index;
+
+            document
+                .querySelectorAll(".option")
+                .forEach(opt => opt.classList.remove("selected"));
+
+            label.classList.add("selected");
+
+            updateQuestionGrid();
+
+        });
+
+        optionsEl.appendChild(label);
+    });
+
+    const percent =
+        Math.round(((currentQuestion + 1) / questions.length) * 100);
+
+    questionCounter.textContent =
+        `سؤال ${faNumber(currentQuestion + 1)} از ${faNumber(questions.length)}`;
+
+    progressPercent.textContent = faNumber(percent) + "٪";
+
+    progressBar.style.width = percent + "%";
+
+    prevBtn.disabled = currentQuestion === 0;
+
+    if (currentQuestion === questions.length - 1) {
+        nextBtn.style.display = "none";
+    } else {
+        nextBtn.style.display = "inline-block";
+    }
+
+    updateQuestionGrid();
+}
+
+
+/* =========================================================
+   دکمه‌های جابه‌جایی
+========================================================= */
+
+prevBtn.addEventListener("click", () => {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        renderQuestion();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+});
+
+
+nextBtn.addEventListener("click", () => {
+
+    if (currentQuestion < questions.length - 1) {
+
+        currentQuestion++;
+
+        renderQuestion();
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+});
+
+
+/* =========================================================
+   پایان آزمون
+========================================================= */
+
+finishBtn.addEventListener("click", () => {
+
+    confirmOverlay.classList.add("show");
+
+});
+
+
+cancelFinish.addEventListener("click", () => {
+
+    confirmOverlay.classList.remove("show");
+
+});
+
+
+confirmFinish.addEventListener("click", () => {
+
+    confirmOverlay.classList.remove("show");
+
+    finishExam(true);
+
+});
+
+
+/* =========================================================
+   پایان واقعی آزمون
+========================================================= */
+
+function finishExam(manualFinish = true) {
+
+    if (examFinished) {
+        return;
+    }
+
+    examFinished = true;
+
+    clearInterval(timerInterval);
+
+    if (remainingSeconds < 0) {
+        remainingSeconds = 0;
+    }
+
+    const attemptNumber = increaseAttemptCount(studentName);
+
+    let correct = 0;
+    let wrong = 0;
+    let blank = 0;
+
+    userAnswers.forEach((answer, index) => {
+
+        if (answer === null) {
+            blank++;
+        }
+        else if (answer === answerKey[index]) {
+            correct++;
+        }
+        else {
+            wrong++;
+        }
+
+    });
+
+    const score = (correct / questions.length) * 20;
+
+    const usedSeconds = totalSeconds - remainingSeconds;
+
+    showResult(
+        attemptNumber,
+        correct,
+        wrong,
+        blank,
+        score,
+        usedSeconds
+    );
+}
+
+
+/* =========================================================
+   نمایش کارنامه
+========================================================= */
+
+function showResult(
+    attemptNumber,
+    correct,
+    wrong,
+    blank,
+    score,
+    usedSeconds
+) {
+
+    examScreen.classList.remove("active");
+    resultScreen.classList.add("active");
+
+    const formattedScore =
+        Number.isInteger(score)
+            ? faNumber(score)
+            : faNumber(score.toFixed(2));
+
+    scoreNumber.textContent = formattedScore;
+
+    studentResult.innerHTML =
+        `${studentName}<br>
+         <span style="font-size:15px;color:#777;">
+         دفعه ${faNumber(attemptNumber)} آزمون
+         </span>`;
+
+    attemptResult.textContent = faNumber(attemptNumber);
+    correctResult.textContent = faNumber(correct);
+    wrongResult.textContent = faNumber(wrong);
+    blankResult.textContent = faNumber(blank);
+
+    timeResult.textContent = formatTime(usedSeconds);
+
+    buildReview();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+   تبدیل زمان
+========================================================= */
+
+function formatTime(seconds) {
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    return (
+        faNumber(String(minutes).padStart(2, "0")) +
+        ":" +
+        faNumber(String(secs).padStart(2, "0"))
+    );
+}
+
+
+/* =========================================================
+   بررسی پاسخ‌های اشتباه و بدون پاسخ
+========================================================= */
+
+function buildReview() {
+
+    reviewContainer.innerHTML = "";
+
+    let hasReview = false;
+
+    const letters = ["الف", "ب", "ج", "د"];
+
+    questions.forEach((q, index) => {
+
+        const userAnswer = userAnswers[index];
+
+        if (
+            userAnswer !== null &&
+            userAnswer === answerKey[index]
+        ) {
+            return;
+        }
+
+        hasReview = true;
+
+        const item = document.createElement("div");
+
+        const isBlank = userAnswer === null;
+
+        item.className =
+            "review-item " +
+            (isBlank ? "blank" : "wrong");
+
+        const userAnswerText =
+            isBlank
+                ? "بدون پاسخ"
+                : `${letters[userAnswer]}) ${q.options[userAnswer]}`;
+
+        const correctAnswerText =
+            `${letters[q.answer]}) ${q.options[q.answer]}`;
+
+        item.innerHTML = `
+            <div class="review-question">
+                ${faNumber(index + 1)}) ${q.text}
+            </div>
+
+            <div class="answer-row user-answer">
+                <strong>پاسخ شما:</strong>
+                ${userAnswerText}
+            </div>
+
+            <div class="answer-row correct-answer">
+                <strong>پاسخ صحیح:</strong>
+                ${correctAnswerText}
+            </div>
+
+            <div class="explanation">
+                <strong>💡 توضیح آموزشی:</strong><br>
+                ${q.explanation.replace(/\n/g, "<br>")}
+            </div>
+        `;
+
+        reviewContainer.appendChild(item);
+    });
+
+    if (!hasReview) {
+
+        reviewContainer.innerHTML = `
+            <div class="empty-review">
+                🎉 آفرین! همه پاسخ‌ها درست هستند.
+                <br>
+                هیچ پاسخ اشتباهی برای بررسی وجود ندارد.
+            </div>
+        `;
+    }
+}
+
+
+/* =========================================================
+   آزمون دوباره
+========================================================= */
+
+retryBtn.addEventListener("click", () => {
+
+    startExam();
+
+});
+
+
+/* =========================================================
+   بازگشت به صفحه اصلی
+========================================================= */
+
+homeBtn.addEventListener("click", () => {
+
+    clearInterval(timerInterval);
+
+    examFinished = true;
+
+    resultScreen.classList.remove("active");
+    examScreen.classList.remove("active");
+    startScreen.classList.add("active");
+
+    studentNameInput.value = "";
+    startBtn.disabled = true;
+
+    timerEl.classList.remove("warning");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+});
+
+
+/* =========================================================
+   جلوگیری از خروج تصادفی هنگام آزمون
+========================================================= */
+
+window.addEventListener("beforeunload", function (event) {
+
+    if (
+        examScreen.classList.contains("active") &&
+        !examFinished
+    ) {
+        event.preventDefault();
+        event.returnValue = "";
+    }
+
+});
+
+
+/* =========================================================
+   کنترل اولیه کلید پاسخ
+========================================================= */
+
+console.log(
+    "کلید آزمون:",
+    answerKey.map((x, i) => `${i + 1}: ${["الف","ب","ج","د"][x]}`).join(" | ")
+);
+
+</script>
+
+</body>
+</html>
+
+
+
+
+این را به صورت یک لینک آناده اجرا دریت کن
